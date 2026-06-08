@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Attendance System</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;display:flex;height:100vh;background:#f4f5f7;color:#222;font-size:13px}
+
+.side{width:200px;background:#1e2a38;display:flex;flex-direction:column;flex-shrink:0}
+.side h1{color:#fff;font-size:14px;font-weight:600;padding:20px 18px;border-bottom:1px solid #2d3d50}
+.side h1 small{display:block;color:#6b7e93;font-size:11px;font-weight:400;margin-top:2px}
+.grp{color:#6b7e93;font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:14px 18px 5px}
+a{display:block;padding:9px 18px;color:#a0b0c0;text-decoration:none;cursor:pointer;border-left:3px solid transparent}
+a:hover{background:#263344;color:#fff}
+a.on{background:#263344;color:#fff;border-left-color:#4a90d9}
+
+.main{flex:1;overflow-y:auto;padding:28px 32px}
+.pg{display:none}.pg.on{display:block}
+h2{font-size:17px;font-weight:600;color:#1e2a38;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e0e4ea}
+
+/* stats */
+.stats{display:flex;gap:14px;margin-bottom:20px}
+.box{border-radius:10px;padding:20px 22px;flex:1;position:relative;overflow:hidden}
+.box::after{content:'';position:absolute;right:-12px;top:-12px;width:70px;height:70px;border-radius:50%;opacity:.15;background:#fff}
+.box .n{font-size:28px;font-weight:700;color:#fff}
+.box .l{font-size:11px;color:rgba(255,255,255,.75);margin-top:4px;font-weight:500}
+.b1{background:linear-gradient(135deg,#3a7bd5,#2d5fb5)}
+.b2{background:linear-gradient(135deg,#11998e,#0d7a71)}
+.b3{background:linear-gradient(135deg,#6c5ce7,#5649c0)}
+.b4{background:linear-gradient(135deg,#f7971e,#e08010)}
+.b5{background:linear-gradient(135deg,#e74c3c,#c0392b)}
+.dash-title{font-size:13px;color:#7a7a9a;margin-bottom:16px;font-weight:500}
+.recent{background:#fff;border:1px solid #e0e4ea;border-radius:8px;overflow:hidden;margin-top:4px}
+.recent-head{padding:13px 18px;border-bottom:1px solid #eef0f5;font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px}
+
+/* form */
+.form{background:#fff;border:1px solid #e0e4ea;border-radius:7px;padding:24px;max-width:640px}
+.row{display:flex;gap:14px;margin-bottom:14px}
+.f{display:flex;flex-direction:column;gap:5px;flex:1}
+.f label{font-size:11px;font-weight:600;color:#666;text-transform:uppercase;letter-spacing:.4px}
+.f input,.f select{padding:8px 10px;border:1px solid #dde1e8;border-radius:5px;font-size:13px;color:#222;background:#fafbfc;outline:none}
+.f input:focus,.f select:focus{border-color:#4a90d9}
+button{margin-top:6px;padding:8px 22px;background:#1e2a38;color:#fff;border:none;border-radius:5px;font-size:13px;cursor:pointer}
+button:hover{background:#263d52}
+.msg{margin-top:10px;font-size:12px;min-height:16px}
+.ok{color:#2e7d4f}.er{color:#c0392b}
+
+/* table */
+.tbar{padding:12px 16px;border-bottom:1px solid #eef0f5}
+.tbar input{padding:7px 10px;border:1px solid #dde1e8;border-radius:5px;font-size:13px;width:220px;outline:none}
+.tbar input:focus{border-color:#4a90d9}
+.tw{background:#fff;border:1px solid #e0e4ea;border-radius:7px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{background:#f7f8fa;padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #eef0f5}
+td{padding:10px 16px;border-bottom:1px solid #f0f2f6;color:#222}
+tr:last-child td{border:none}
+tr:hover td{background:#fafbff}
+.emp td{color:#bbb;text-align:center;padding:28px}
+.p{color:#2e7d4f;font-weight:600}.ab{color:#c0392b;font-weight:600}
+
+/* alert result */
+.ar{margin-top:16px;padding:16px 18px;border-radius:7px;font-size:13px;line-height:1.9;display:none}
+.ar.show{display:block}
+.ar.low{background:#fff8f5;border:1px solid #f0c8b0;color:#7a2a10}
+.ar.ok{background:#f4faf7;border:1px solid #b0d9c0;color:#1a4a2e}
+.ar b{font-weight:600}
+.ar .w{display:block;margin-top:6px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="side">
+  <h1>Attendance System<small>OOP Project</small></h1>
+  <div class="grp">Overview</div>
+  <a class="on" onclick="go('dash',this)">Dashboard</a>
+  <div class="grp">Manage</div>
+  <a onclick="go('as',this)">Add Student</a>
+  <a onclick="go('at',this)">Add Teacher</a>
+  <a onclick="go('ma',this)">Mark Attendance</a>
+  <div class="grp">Records</div>
+  <a onclick="go('vs',this)">Students</a>
+  <a onclick="go('vt',this)">Teachers</a>
+  <a onclick="go('va',this)">Attendance</a>
+  <div class="grp">Reports</div>
+  <a onclick="go('la',this)">Low Attendance</a>
+</div>
+
+<div class="main">
+
+<div id="dash" class="pg on">
+  <h2>Dashboard</h2>
+  <div class="dash-title">Overview</div>
+  <div class="stats">
+    <div class="box b1"><div class="n" id="ds">—</div><div class="l">Total Students</div></div>
+    <div class="box b2"><div class="n" id="dt">—</div><div class="l">Total Teachers</div></div>
+    <div class="box b3"><div class="n" id="dr">—</div><div class="l">Records</div></div>
+    <div class="box b4"><div class="n" id="dp">—</div><div class="l">Present</div></div>
+    <div class="box b5"><div class="n" id="da">—</div><div class="l">Absent</div></div>
+  </div>
+  <div class="recent">
+    <div class="recent-head">Recent Attendance</div>
+    <table><thead><tr><th>Name</th><th>ID</th><th>Subject</th><th>Date</th><th>Status</th></tr></thead>
+    <tbody id="rec"><tr class="emp"><td colspan="5">No records yet.</td></tr></tbody></table>
+  </div>
+</div>
+
+<div id="as" class="pg">
+  <h2>Add Student</h2>
+  <div class="form">
+    <div class="row">
+      <div class="f"><label>Name</label><input id="sn" placeholder="Full name"></div>
+      <div class="f"><label>ID</label><input id="si" placeholder="e.g. 317"></div>
+    </div>
+    <div class="row">
+      <div class="f"><label>Contact</label><input id="sc" placeholder="Phone number"></div>
+      <div class="f"><label>Course</label><input id="sco" placeholder="e.g. OOP"></div>
+      <div class="f"><label>Year</label><input id="sy" placeholder="e.g. 2025"></div>
+    </div>
+    <button onclick="addStudent()">Save</button>
+    <div class="msg" id="sm"></div>
+  </div>
+</div>
+
+<div id="at" class="pg">
+  <h2>Add Teacher</h2>
+  <div class="form">
+    <div class="row">
+      <div class="f"><label>Name</label><input id="tn" placeholder="Full name"></div>
+      <div class="f"><label>ID</label><input id="ti" placeholder="e.g. 22"></div>
+    </div>
+    <div class="row">
+      <div class="f"><label>Contact</label><input id="tc" placeholder="Phone number"></div>
+      <div class="f"><label>Subject</label><input id="ts" placeholder="e.g. OOP"></div>
+    </div>
+    <button onclick="addTeacher()">Save</button>
+    <div class="msg" id="tm"></div>
+  </div>
+</div>
+
+<div id="ma" class="pg">
+  <h2>Mark Attendance</h2>
+  <div class="form">
+    <div class="row">
+      <div class="f"><label>Name</label><input id="an" placeholder="Student name"></div>
+      <div class="f"><label>ID</label><input id="ai" placeholder="Student ID"></div>
+    </div>
+    <div class="row">
+      <div class="f"><label>Course</label><input id="ac" placeholder="e.g. OOP"></div>
+      <div class="f"><label>Year</label><input id="ay" placeholder="e.g. 2025"></div>
+      <div class="f"><label>Subject</label><input id="asb" placeholder="e.g. OOP"></div>
+    </div>
+    <div class="row">
+      <div class="f"><label>Date</label><input id="ad" placeholder="e.g. 8 JUN 2026"></div>
+      <div class="f"><label>Status</label><select id="ast"><option value="p">Present</option><option value="a">Absent</option></select></div>
+      <div class="f"></div>
+    </div>
+    <button onclick="markAtt()">Save</button>
+    <div class="msg" id="am"></div>
+  </div>
+</div>
+
+<div id="vs" class="pg">
+  <h2>Students</h2>
+  <div class="tw">
+    <div class="tbar"><input placeholder="Search..." oninput="fil('stb',this.value)"></div>
+    <table id="stb"><thead><tr><th>Name</th><th>ID</th><th>Contact</th><th>Course</th><th>Year</th></tr></thead>
+    <tbody id="sb"><tr class="emp"><td colspan="5">Loading...</td></tr></tbody></table>
+  </div>
+</div>
+
+<div id="vt" class="pg">
+  <h2>Teachers</h2>
+  <div class="tw">
+    <table id="ttb"><thead><tr><th>Name</th><th>ID</th><th>Contact</th><th>Subject</th></tr></thead>
+    <tbody id="tb"><tr class="emp"><td colspan="4">Loading...</td></tr></tbody></table>
+  </div>
+</div>
+
+<div id="va" class="pg">
+  <h2>Attendance Records</h2>
+  <div class="tw">
+    <div class="tbar"><input placeholder="Search..." oninput="fil('atb',this.value)"></div>
+    <table id="atb"><thead><tr><th>Name</th><th>ID</th><th>Course</th><th>Subject</th><th>Date</th><th>Status</th></tr></thead>
+    <tbody id="ab"><tr class="emp"><td colspan="6">Loading...</td></tr></tbody></table>
+  </div>
+</div>
+
+<div id="la" class="pg">
+  <h2>Low Attendance</h2>
+  <div class="form" style="max-width:480px">
+    <div class="row">
+      <div class="f"><label>Student ID</label><input id="lid" placeholder="e.g. 313"></div>
+      <div class="f"><label>Subject</label><input id="lsb" placeholder="e.g. OOP"></div>
+    </div>
+    <button onclick="chkAlert()">Check</button>
+  </div>
+  <div class="ar" id="ar"></div>
+</div>
+
+</div>
+
+<script>
+let S=[],T=[],A=[];
+
+function go(id,el){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('a').forEach(a=>a.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  el.classList.add('on');
+}
+
+function fil(id,q){
+  document.querySelectorAll('#'+id+' tbody tr').forEach(r=>{
+    r.style.display=r.innerText.toLowerCase().includes(q.toLowerCase())?'':'none';
+  });
+}
+
+function v(id){return document.getElementById(id).value.trim();}
+function clr(...ids){ids.forEach(i=>document.getElementById(i).value='');}
+function pad(s,n){return String(s).padEnd(n);}
+
+function msg(id,txt,ok){
+  const e=document.getElementById(id);
+  e.className='msg '+(ok?'ok':'er');e.textContent=txt;
+  setTimeout(()=>{e.textContent='';e.className='msg';},3000);
+}
+
+async function post(file,content){
+  try{const r=await fetch('/append',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({file,content})});return r.ok;}catch{return false;}
+}
+
+async function addStudent(){
+  const[n,i,c,co,y]=[v('sn'),v('si'),v('sc'),v('sco'),v('sy')];
+  if(!n||!i||!c||!co||!y){msg('sm','All fields required.',false);return;}
+  const ok=await post('student.txt',`${pad(n,20)}|${pad(i,10)}|${pad(c,20)}|${pad(co,10)}|${y}\n`);
+  if(ok){S.push({name:n,id:i,contact:c,course:co,year:y});rS();uStats();clr('sn','si','sc','sco','sy');}
+  msg('sm',ok?'Saved.':'Could not save — is server.py running?',ok);
+}
+
+async function addTeacher(){
+  const[n,i,c,s]=[v('tn'),v('ti'),v('tc'),v('ts')];
+  if(!n||!i||!c||!s){msg('tm','All fields required.',false);return;}
+  const ok=await post('teacher.txt',`${pad(n,20)}|${pad(i,10)}|${pad(c,20)}|${s}\n`);
+  if(ok){T.push({name:n,id:i,contact:c,subject:s});rT();uStats();clr('tn','ti','tc','ts');}
+  msg('tm',ok?'Saved.':'Could not save — is server.py running?',ok);
+}
+
+async function markAtt(){
+  const[n,i,c,y,s,d]=[v('an'),v('ai'),v('ac'),v('ay'),v('asb'),v('ad')];
+  const st=document.getElementById('ast').value;
+  if(!n||!i||!c||!y||!s||!d){msg('am','All fields required.',false);return;}
+  const ok=await post('attendance.txt',`${pad(n,20)}|${pad(i,15)}|${pad(c,10)}|${pad(y,6)}|${pad(s,16)}|${pad(d,12)}|${st}\n`);
+  if(ok){A.push({name:n,id:i,course:c,year:y,subject:s,date:d,status:st});rA();uStats();}
+  msg('am',ok?'Saved.':'Could not save — is server.py running?',ok);
+}
+
+function rS(){
+  const b=document.getElementById('sb');
+  b.innerHTML=S.length?S.map(s=>`<tr><td>${s.name}</td><td>${s.id}</td><td>${s.contact}</td><td>${s.course}</td><td>${s.year}</td></tr>`).join(''):'<tr class="emp"><td colspan="5">No records.</td></tr>';
+}
+function rT(){
+  const b=document.getElementById('tb');
+  b.innerHTML=T.length?T.map(t=>`<tr><td>${t.name}</td><td>${t.id}</td><td>${t.contact}</td><td>${t.subject}</td></tr>`).join(''):'<tr class="emp"><td colspan="4">No records.</td></tr>';
+}
+function rA(){
+  const b=document.getElementById('ab');
+  b.innerHTML=A.length?A.map(a=>`<tr><td>${a.name}</td><td>${a.id}</td><td>${a.course}</td><td>${a.subject}</td><td>${a.date}</td><td class="${a.status==='p'?'p':'ab'}">${a.status==='p'?'Present':'Absent'}</td></tr>`).join(''):'<tr class="emp"><td colspan="6">No records.</td></tr>';
+}
+
+function uStats(){
+  document.getElementById('ds').textContent=[...new Set(S.map(s=>s.id))].length;
+  document.getElementById('dt').textContent=[...new Set(T.map(t=>t.id))].length;
+  document.getElementById('dr').textContent=A.length;
+  document.getElementById('dp').textContent=A.filter(a=>a.status==='p').length;
+  document.getElementById('da').textContent=A.filter(a=>a.status==='a').length;
+  const rec=document.getElementById('rec');
+  const last=[...A].reverse().slice(0,6);
+  rec.innerHTML=last.length?last.map(a=>`<tr><td>${a.name}</td><td>${a.id}</td><td>${a.subject}</td><td>${a.date}</td><td class="${a.status==='p'?'p':'ab'}">${a.status==='p'?'Present':'Absent'}</td></tr>`).join(''):'<tr class="emp"><td colspan="5">No records yet.</td></tr>';
+}
+
+function chkAlert(){
+  const id=v('lid'),sub=v('lsb').toLowerCase(),div=document.getElementById('ar');
+  if(!id||!sub)return;
+  const f=A.filter(a=>a.id.includes(id)&&a.subject.toLowerCase().includes(sub));
+  if(!f.length){div.className='ar show low';div.innerHTML='No records found.';return;}
+  const tot=f.length,att=f.filter(a=>a.status==='p').length,pct=((att/tot)*100).toFixed(1),low=pct<75;
+  div.className='ar show '+(low?'low':'ok');
+  div.innerHTML=`<b>ID:</b> ${id} &nbsp; <b>Subject:</b> ${sub.toUpperCase()}<br>
+<b>Total:</b> ${tot} &nbsp; <b>Attended:</b> ${att} &nbsp; <b>Missed:</b> ${tot-att}<br>
+<b>Percentage:</b> ${pct}%<span class="w">${low?'Attendance below 75% — attend classes regularly.':'Attendance is satisfactory.'}</span>`;
+}
+
+async function lf(f){try{const r=await fetch(f);return r.ok?await r.text():''}catch{return '';}}
+
+async function init(){
+  const[st,te,at]=await Promise.all([lf('student.txt'),lf('teacher.txt'),lf('attendance.txt')]);
+  const parse=(txt,keys)=>txt.split('\n').map(l=>l.trim()).filter(l=>l&&l.includes('|')).map(l=>{const p=l.split('|').map(x=>x.trim());return Object.fromEntries(keys.map((k,i)=>[k,p[i]||'']));});
+  S=parse(st,['name','id','contact','course','year']);
+  T=parse(te,['name','id','contact','subject']);
+  A=parse(at,['name','id','course','year','subject','date','status']);
+  rS();rT();rA();uStats();
+}
+init();
+</script>
+</body>
+</html>

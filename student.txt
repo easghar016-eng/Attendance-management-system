@@ -1,0 +1,17 @@
+Malaika Hanif       |313       |564738291456        |OOP       |2025 
+Malaika Hanif       |313       |564738291456        |MVC       |2025
+Malaika Hanif       |313       |564738291456        |LA        |2025
+Malaika Hanif       |313       |564738291456        |SE        |2025
+Malaika Hanif       |313       |564738291456        |TWPS      |2025
+Malaika Hanif       |313       |564738291456        |AP        |2025
+Eman Asghar         |316       |342516785623        |OOP       |2025 
+Eman Asghar         |316       |342516785623        |MVC       |2025 
+Eman Asghar         |316       |342516785623        |LA        |2025 
+Eman Asghar         |316       |342516785623        |SE        |2025 
+Eman Asghar         |316       |342516785623        |TWPS      |2025 
+Eman Asghar         |316       |342516785623        |AP        |2025 
+
+ 
+
+Areeba Nasir        |323       |03224469078         |OOP       |2025
+Abeeha Younas       |315       |0312567890          |OOP       |2025
