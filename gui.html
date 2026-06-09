@@ -78,6 +78,7 @@ tr:hover td{background:#fafbff}
   <a onclick="go('as',this)">Add Student</a>
   <a onclick="go('at',this)">Add Teacher</a>
   <a onclick="go('ma',this)">Mark Attendance</a>
+  <a onclick="go('rs',this)">Remove Student</a>
   <div class="grp">Records</div>
   <a onclick="go('vs',this)">Students</a>
   <a onclick="go('vt',this)">Teachers</a>
@@ -121,7 +122,16 @@ tr:hover td{background:#fafbff}
     <div class="msg" id="sm"></div>
   </div>
 </div>
-
+<div id="rs" class="pg">
+  <h2>Remove Student</h2>
+  <div class="form">
+    <div class="row">
+      <div class="f"><label>Student ID</label><input id="rid" placeholder="e.g. 313"></div>
+    </div>
+    <button onclick="removeStudent()">Remove</button>
+    <div class="msg" id="rm"></div>
+  </div>
+</div>
 <div id="at" class="pg">
   <h2>Add Teacher</h2>
   <div class="form">
@@ -245,7 +255,16 @@ async function addTeacher(){
   if(ok){T.push({name:n,id:i,contact:c,subject:s});rT();uStats();clr('tn','ti','tc','ts');}
   msg('tm',ok?'Saved.':'Could not save — is server.py running?',ok);
 }
-
+async function removeStudent(){
+  const id=v('rid');
+  if(!id){msg('rm','Student ID required.',false);return;}
+  const idx=S.findIndex(s=>s.id===id);
+  if(idx===-1){msg('rm','No student found with that ID.',false);return;}
+  S.splice(idx,1);
+  await post('student.txt',S.map(s=>`${pad(s.name,20)}|${pad(s.id,10)}|${pad(s.contact,20)}|${pad(s.course,10)}|${s.year}`).join('\n')+'\n');
+  rS();uStats();clr('rid');
+  msg('rm','Student removed.',true);
+}
 async function markAtt(){
   const[n,i,c,y,s,d]=[v('an'),v('ai'),v('ac'),v('ay'),v('asb'),v('ad')];
   const st=document.getElementById('ast').value;
