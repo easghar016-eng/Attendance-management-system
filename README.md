@@ -1,7 +1,7 @@
 Student Attendance Management System
 
 *Overview*:
-The Student Attendance Management System is a C++ web app developed using Object-Oriented Programming (OOP) concepts. The system allows teachers and students to be managed efficiently, attendance to be recorded, and records to be searched and viewed using unique IDs.
+          The Student Attendance Management System is a C++ web app developed using Object-Oriented Programming (OOP) concepts. The system allows teachers and students to be managed efficiently, attendance to be recorded, and records to be searched and viewed using unique IDs.
 
 *Features*:  
 
@@ -55,4 +55,4 @@ The Student Attendance Management System is a C++ web app developed using Object
 
 
 *Conclusion*:  
-This project demonstrates the practical implementation of Object-Oriented Programming in C++. It provides a simple and effective solution for managing teachers, students, and attendance records while ensuring organized data management.  
+            This project demonstrates the practical implementation of Object-Oriented Programming in C++. It provides a simple and effective solution for managing teachers, students, and attendance records while ensuring organized data management.  
