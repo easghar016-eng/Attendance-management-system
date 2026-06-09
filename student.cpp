@@ -55,4 +55,45 @@ public:
             cout<<"Student with name "<<name<<" not found."<<endl;
         }
     }
+~Student() {}
+    void remove_student(){
+        string filename = "students.txt";
+        ifstream infile(filename);
+        if(!infile.is_open()){
+            cout<<"Unable to open file."<<endl;
+            return;
+        }
+        string line, tempFile = "temp.txt";
+        ofstream outfile(tempFile);
+        if(!outfile.is_open()){
+            cout<<"Unable to create temporary file."<<endl;
+            return;
+        }
+        int removeID;
+        cout<<"Enter ID of student to remove: ";
+        cin>>removeID;
+        bool found = false;
+        while(getline(infile, line)){
+            if(line.empty()) continue;
+            size_t idPos = line.find("ID: ");
+            if(idPos != string::npos){
+                int id = stoi(line.substr(idPos + 4));
+                if(id == removeID){
+                    found = true;
+                    continue; // Skip writing this record to temp file
+                }
+            }
+            outfile << line << endl; // Write all other lines to temp file
+        }
+        infile.close();
+        outfile.close();
+        if(found){
+            remove(filename.c_str()); // Delete original file
+            rename(tempFile.c_str(), filename.c_str()); // Rename temp file to original name
+            cout<<"Student with ID "<<removeID<<" removed successfully."<<endl;
+        } else {
+            remove(tempFile.c_str()); // Clean up temp file
+            cout<<"Student with ID "<<removeID<<" not found."<<endl;
+        }
+    }
 };
