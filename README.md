@@ -27,6 +27,8 @@ Student Attendance Management System
 
 *OOP Concepts Used*:  
 
+
+
 * Classes and Objects  
 * Encapsulation  
 * Inheritance  
